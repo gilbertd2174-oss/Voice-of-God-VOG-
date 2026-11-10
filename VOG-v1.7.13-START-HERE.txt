@@ -1,0 +1,49 @@
+VOICE OF GOD (VOG) 1.7.13
+4 independent oscillators / 16 voices / 200 sounds / full effects rack
+
+This download is SOURCE CODE. Build it on GitHub to get the Windows VST3.
+
+1. Make a NEW GitHub repository for this synthesizer.
+2. Upload VOG-v1.7.13-GitHub-Ready.zip to that repository without extracting it. Commit.
+3. In that repository create .github/workflows/main.yml.
+4. Paste ALL the text from VOG-v1.7.13-main.yml into the new file. Commit.
+5. Open Actions. Choose the newest VOG Windows Build run.
+6. When green, download Voice-of-God-Windows-x64-v1.7.13 under Artifacts.
+7. Extract the download and any inner ZIP. Copy the complete Voice of God.vst3 folder into C:\Program Files\Common Files\VST3.
+8. Restart your DAW, rescan plugins, and load this as an INSTRUMENT on a MIDI track.
+
+The supplied workflow unpacks the source ZIP for you. Do not use the vocal-processor main.yml for this synthesizer.
+
+Full details: README.md and INSTALL.md inside the source archive.
+
+If updating an existing repository, upload the 1.7.13 source ZIP and replace the contents of .github/workflows/main.yml. The workflow identifies 1.7.13 by its contents, so older ZIPs can stay.
+
+REC → play → STOP → SAVE WAV. Takes stop automatically at 03:00.
+For 5 BPM in a DAW, choose Arp clock: Internal.
+
+SAVE PATCH → type a name → Save new patch. The sound appears under User Patches. Use PATCH FILES to import/export .vog files.
+
+Window too large? Open the percentage menu next to the VOG title and choose 75% or 60%. FIT restores a size for the current display. You can also drag the lower-right corner to resize.
+
+In Reason 14, use the new v1.7.13 VST3. It starts at 85%, about 697 × 442 logical pixels before host scaling. If Reason makes it too large, check Options → Manage Plugins → Voice of God → Auto-scale (follow Windows display scaling). Turn that off for VOG and reopen the plugin.
+
+If a build fails, look for First compiler or linker errors near the bottom of the build step.
+
+For scale runs: turn Arpeggiator on, choose Scale, and play one key as the root. Set Octaves and Direction to move up and down the keyboard.
+
+For one-key chords: turn Arpeggiator on, choose Chord → Major (or another type), then play a root key. Set Chord to Off to use Scale.
+For manual chords: turn Arpeggiator off and set Voice mode to Poly 16.
+
+If a track is already making noise, mute it in the DAW, then click PANIC in VOG to clear held notes and effect tails.
+
+Choose New 100 in the preset category menu for the expansion bank. The keyboard spans C2 to B7 across the panel.
+SAVE PATCH opens a name field inside the editor. Click SAVE to add the patch or CANCEL to close the field.
+The arp Octaves control goes from 1 to 4. Review recorded host automation for Octaves because its parameter range expanded.
+
+USB piano in standalone: Performance → Velocity curve → Auto or Gentle. Choose Fixed for equal volume from every key strike. Set Held level to Steady if the sound fades while you hold a key.
+
+For a chord arp that stops when you lift your keys, leave Hold off. Turn Hold on only when you want the pattern to latch.
+Click RANDOM SCALE in the arpeggiator to choose a different scale and switch Chord off.
+Each main oscillator has a GATE ON/OFF button in its panel header. SAVE WAV now boosts the finished recording toward -1 dBFS without changing live playback.
+Arpeggiator Gate now ranges from 1% to 95%. If you recorded Gate automation in a DAW, review it after upgrading because the parameter range changed.
+If you heard a burst or crash while the arp was running, replace the installed VST3 or standalone app with this build before testing it again.
