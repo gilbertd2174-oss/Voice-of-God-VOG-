@@ -1,0 +1,35 @@
+VOICE OF GOD (VOG) 1.1.0
+4 independent oscillators / 16 voices / 100 sounds / full effects rack
+
+This download is SOURCE CODE. Build it on GitHub to get the Windows VST3.
+
+1. Make a NEW GitHub repository for this synthesizer.
+2. Upload VOG-v1.5.0-GitHub-Ready.zip to that repository without extracting it. Commit.
+3. In that repository create .github/workflows/main.yml.
+4. Paste ALL the text from VOG-v1.5.0-main.yml into the new file. Commit.
+5. Open Actions. Choose the newest VOG Windows Build run.
+6. When green, download Voice-of-God-Windows-x64-v1.5.0 under Artifacts.
+7. Extract the download and any inner ZIP. Copy the complete Voice of God.vst3 folder into C:\Program Files\Common Files\VST3.
+8. Restart your DAW, rescan plugins, and load this as an INSTRUMENT on a MIDI track.
+
+The supplied workflow unpacks the source ZIP for you. Do not use the vocal-processor main.yml for this synthesizer.
+
+Full details: README.md and INSTALL.md inside the source archive.
+
+If updating an existing repository, replace its previous source ZIP and .github/workflows/main.yml.
+
+REC → play → STOP → SAVE WAV. Takes stop automatically at 03:00.
+For 5 BPM in a DAW, choose Arp clock: Internal.
+
+SAVE PATCH → type a name → Save new patch. The sound appears under User Patches. Use PATCH FILES to import/export .vog files.
+
+Window too large? Click FIT next to VOG at the top left. You can also drag the lower-right corner to resize. Scroll the settings vertically; the keyboard stays below them.
+
+In Reason 14, use the new v1.5.0 VST3. It opens at up to 820 × 520 logical pixels. Click FIT to return to that size. If Reason makes it too large, check Options → Manage Plugins → Voice of God → Auto-scale (follow Windows display scaling). Turn that off for VOG and reopen the plugin.
+
+If a build fails, look for First compiler or linker errors near the bottom of the build step.
+
+For scale runs: turn Arpeggiator on, choose Scale, and play one key as the root. Set Octaves and Direction to move up and down the keyboard.
+
+For one-key chords: turn Arpeggiator on, choose Chord → Major (or another type), then play a root key. Set Chord to Off to use Scale.
+For manual chords: turn Arpeggiator off and set Voice mode to Poly 16.
