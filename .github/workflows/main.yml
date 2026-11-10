@@ -10,15 +10,15 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
-      - name: Locate and unpack VOG 1.7.13 source
+      - name: Locate and unpack VOG 1.7.16 source
         id: project
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           $workspace = [IO.Path]::GetFullPath($env:GITHUB_WORKSPACE)
-          $zipName = 'VOG-v1.7.13-GitHub-Ready.zip'
-          $version = '(?im)^\s*project\s*\(\s*DavoeAnalogSynthesizer\s+VERSION\s+1[.]7[.]13(?=\s|\))'
+          $zipName = 'VOG-v1.7.16-GitHub-Ready.zip'
+          $version = '(?im)^\s*project\s*\(\s*DavoeAnalogSynthesizer\s+VERSION\s+1[.]7[.]16(?=\s|\))'
           $required = @('CMakeLists.txt','Source/PluginProcessor.cpp','Source/PluginEditor.cpp',
               'Source/SynthEngine.h','Source/Parameters.h','Tests/EngineTests.cpp',
               'scripts/build-windows.ps1','scripts/package-windows.ps1')
@@ -44,7 +44,7 @@ jobs:
                   if ($roots.Count -eq 1) {
                       [pscustomobject]@{ Path = $file.FullName; Root = $roots[0] }
                   } else {
-                      Write-Host ('Skipped ZIP without exactly one complete VOG 1.7.13 project: ' + [IO.Path]::GetRelativePath($workspace,$file.FullName))
+                      Write-Host ('Skipped ZIP without exactly one complete VOG 1.7.16 project: ' + [IO.Path]::GetRelativePath($workspace,$file.FullName))
                   }
               } catch {
                   Write-Host ('Could not read ZIP: ' + [IO.Path]::GetRelativePath($workspace,$file.FullName))
@@ -63,7 +63,7 @@ jobs:
                       $hashes = @($matchesByVersion | ForEach-Object { (Get-FileHash -LiteralPath $_.Path -Algorithm SHA256).Hash } | Sort-Object -Unique)
                       if ($hashes.Count -gt 1) {
                           $paths = ($matchesByVersion | ForEach-Object { [IO.Path]::GetRelativePath($workspace,$_.Path) }) -join ', '
-                          throw "Found different VOG 1.7.13 ZIPs ($paths). Upload the intended ZIP to the repository root as $zipName."
+                          throw "Found different VOG 1.7.16 ZIPs ($paths). Upload the intended ZIP to the repository root as $zipName."
                       }
                   }
                   $selected = $matchesByVersion[0]
@@ -84,7 +84,7 @@ jobs:
               [IO.Compression.ZipFile]::ExtractToDirectory($zipPath,$destination)
               $projectRoot = $destination
               if ($selected.Root) { $projectRoot = Join-Path $destination $selected.Root }
-              Write-Host ('Unpacked VOG 1.7.13 source: ' + [IO.Path]::GetRelativePath($workspace,$zipPath))
+              Write-Host ('Unpacked VOG 1.7.16 source: ' + [IO.Path]::GetRelativePath($workspace,$zipPath))
           } else {
               $projects = @(foreach ($script in (Get-ChildItem -LiteralPath $workspace -Recurse -File -Filter 'build-windows.ps1' -Force)) {
                   if ($script.Directory.Name -ne 'scripts') { continue }
@@ -92,8 +92,8 @@ jobs:
                   $missing = @($required | Where-Object { -not (Test-Path -LiteralPath (Join-Path $root $_) -PathType Leaf) })
                   if ($missing.Count -eq 0 -and [IO.File]::ReadAllText((Join-Path $root 'CMakeLists.txt')) -match $version) { $root }
               })
-              if ($projects.Count -eq 0) { throw "No complete VOG 1.7.13 source found in this commit. Upload $zipName to the Code page and commit it." }
-              if ($projects.Count -gt 1 -and $projects -notcontains $workspace) { throw "Found multiple extracted VOG 1.7.13 projects. Upload the intended project as $zipName at the repository root." }
+              if ($projects.Count -eq 0) { throw "No complete VOG 1.7.16 source found in this commit. Upload $zipName to the Code page and commit it." }
+              if ($projects.Count -gt 1 -and $projects -notcontains $workspace) { throw "Found multiple extracted VOG 1.7.16 projects. Upload the intended project as $zipName at the repository root." }
               $projectRoot = if ($projects -contains $workspace) { $workspace } else { $projects[0] }
           }
 
@@ -104,7 +104,7 @@ jobs:
           }
           $relative = [IO.Path]::GetRelativePath($workspace, $projectRoot).Replace('\','/')
           Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "root=$relative" -Encoding utf8
-          Write-Host "Found VOG 1.7.13 project: $relative"
+          Write-Host "Found VOG 1.7.16 project: $relative"
       - name: Build VST3, standalone and DSP tests
         shell: pwsh
         working-directory: ${{ steps.project.outputs.root }}
@@ -112,7 +112,7 @@ jobs:
       - name: Upload Windows package
         uses: actions/upload-artifact@v4
         with:
-          name: Voice-of-God-Windows-x64-v1.7.13
+          name: Voice-of-God-Windows-x64-v1.7.16
           path: ${{ steps.project.outputs.root }}/dist/Voice-of-God-Windows-x64.zip
           if-no-files-found: error
       - name: Upload corresponding project and fetched dependency source
