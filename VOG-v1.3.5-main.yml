@@ -21,7 +21,7 @@ jobs:
               (Test-Path -LiteralPath (Join-Path $_.Directory.Parent.FullName 'CMakeLists.txt') -PathType Leaf) -and
               (Test-Path -LiteralPath (Join-Path $_.Directory.Parent.FullName 'Source/PluginProcessor.cpp') -PathType Leaf)
           })
-          if ($existing.Count -gt 0 -and -not (Test-Path -LiteralPath (Join-Path $workspace 'VOG-v1.3.5-GitHub-Ready.zip'))) { Write-Host 'Extracted project files are already present.'; return }
+          if ($existing.Count -gt 0) { Write-Host 'Extracted project files are already present.'; return }
           $archives = @(Get-ChildItem -LiteralPath $workspace -Recurse -File -Filter '*.zip' -Force | Where-Object {
               $archive = $null
               try {
@@ -37,10 +37,10 @@ jobs:
               } catch { $false } finally { if ($null -ne $archive) { $archive.Dispose() } }
           })
           if ($archives.Count -eq 0) {
-              throw 'No source project was found. Upload VOG-v1.3.5-GitHub-Ready.zip to the repository Code page, then commit it. The workflow can unpack that ZIP automatically.'
+              throw 'No source project was found. Upload VOG-GitHub-Ready.zip to the repository Code page, then commit it. The workflow can unpack that ZIP automatically.'
           }
           if ($archives.Count -gt 1) {
-              $preferred = @($archives | Where-Object { $_.Name -eq 'VOG-v1.3.5-GitHub-Ready.zip' })
+              $preferred = @($archives | Where-Object { $_.Name -eq 'VOG-GitHub-Ready.zip' })
               if ($preferred.Count -eq 1) { $archives = $preferred } else { throw 'Keep one source ZIP in the repository so the workflow can select it.' }
           }
           $zipPath = $archives[0].FullName
@@ -64,9 +64,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $workspace = [IO.Path]::GetFullPath($env:GITHUB_WORKSPACE)
           $rootScript = Join-Path $workspace 'scripts/build-windows.ps1'
-          if (Test-Path -LiteralPath (Join-Path $workspace '.davoe-unpacked/scripts/build-windows.ps1') -PathType Leaf) {
-              $projectRoot = Join-Path $workspace '.davoe-unpacked'
-          } elseif (Test-Path -LiteralPath $rootScript -PathType Leaf) {
+          if (Test-Path -LiteralPath $rootScript -PathType Leaf) {
               $projectRoot = $workspace
           } else {
               $candidates = @(Get-ChildItem -LiteralPath $workspace -Recurse -File -Filter 'build-windows.ps1' -Force | Where-Object {
@@ -89,7 +87,6 @@ jobs:
                   throw "Project upload is incomplete: $relativeFile is missing. Upload the full extracted source project."
               }
           }
-          if (-not ([IO.File]::ReadAllText((Join-Path $projectRoot 'CMakeLists.txt')).Contains('VERSION 1.3.5'))) { throw 'Use the VOG 1.3.5 source ZIP with this workflow.' }
           $relative = [IO.Path]::GetRelativePath($workspace, $projectRoot).Replace('\','/')
           Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "root=$relative" -Encoding utf8
           Write-Host "Found plugin project: $relative"
@@ -100,7 +97,7 @@ jobs:
       - name: Upload Windows package
         uses: actions/upload-artifact@v4
         with:
-          name: Voice-of-God-Windows-x64-v1.3.5
+          name: Voice-of-God-Windows-x64
           path: ${{ steps.project.outputs.root }}/dist/Voice-of-God-Windows-x64.zip
           if-no-files-found: error
       - name: Upload corresponding project and fetched dependency source
@@ -125,3 +122,4 @@ jobs:
             ${{ steps.project.outputs.root }}/build/_deps/juce-src/
             !${{ steps.project.outputs.root }}/build/_deps/juce-src/.git/**
           if-no-files-found: error
+
